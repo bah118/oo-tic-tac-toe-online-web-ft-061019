@@ -23,91 +23,91 @@ class TicTacToe
         puts " #{@board[6]} | #{@board[7]} | #{@board[8]} "
     end
 
-def input_to_index(user_input)
-    user_input.to_i - 1
-end
-  
-def move(index, current_player)
-    @board[index] = current_player
-end
-
-def position_taken?(index)
-    !(@board[index].nil? || @board[index] == " ")
-end
-  
-def valid_move?(index)
-    index.between?(0,8) && !position_taken?(index)
-end
-  
-def turn
-    puts "Please enter 1-9:"
-    input = gets.strip
-    index = input_to_index(input)
-    if valid_move?(index)
-      move(index, current_player)
-      display_board
-    else
-      turn
+    def input_to_index(user_input)
+        user_input.to_i - 1
     end
-end
+  
+    def move(index, current_player)
+        @board[index] = current_player
+    end
 
-def current_player
-    case turn_count % 2
-        when 0
-            "X"
+    def position_taken?(index)
+        !(@board[index].nil? || @board[index] == " ")
+    end
+  
+    def valid_move?(index)
+        index.between?(0,8) && !position_taken?(index)
+    end
+  
+    def turn
+        puts "Please enter 1-9:"
+        input = gets.strip
+        index = input_to_index(input)
+        if valid_move?(index)
+            move(index, current_player)
+            display_board
+         else
+            turn
+        end
+    end
+
+    def current_player
+        case turn_count % 2
+            when 0
+                "X"
+            else
+                "O"
+        end
+    end
+
+    def turn_count
+        counter = 0
+        @board.each{|i| counter += 1 if i == "X" || i == "O"}
+        counter    
+    end
+
+    def won?
+        WIN_COMBINATIONS.each do |combo|
+  
+            pos1 = combo[0]
+            pos2 = combo[1]
+            pos3 = combo[2]
+  
+            if @board[pos1] == "X" && @board[pos2] == "X" && @board[pos3] == "X"
+                return combo
+            elsif @board[pos1] == "O" && @board[pos2] == "O" && @board[pos3] == "O"
+                return combo
+            end
+        end
+        false
+    end
+
+    def full?
+        @board.all? {|i| i == "X" || i == "O"}
+    end
+  
+    def draw?
+        if full? && !won?
+            return true
         else
-            "O"
+            false
+        end
     end
-end
-
-def turn_count
-    counter = 0
-    @board.each{|i| counter += 1 if i == "X" || i == "O"}
-    counter    
-end
-
-def won?
-    WIN_COMBINATIONS.each do |combo|
   
-      pos1 = combo[0]
-      pos2 = combo[1]
-      pos3 = combo[2]
-  
-      if @board[pos1] == "X" && @board[pos2] == "X" && @board[pos3] == "X"
-          return combo
-        elsif @board[pos1] == "O" && @board[pos2] == "O" && @board[pos3] == "O"
-          return combo
-      end
+    def over?
+        true if won? || full? || draw?
     end
-    false
-end
-
-def full?
-    @board.all? {|i| i == "X" || i == "O"}
-end
   
-def draw?
-    if full? && !won?
-      return true
-    else
-      false
+    def winner
+        @board[won?[0]] if won?
     end
-end
-  
-def over?
-    true if won? || full? || draw?
-end
-  
-def winner
-    @board[won?[0]] if won?
-end
 
-def play
-    until over?
-        turn
+    def play
+        until over?
+            turn
+        end
+        puts "Cat's Game!" if draw?
+        puts "Congratulations #{winner}!"
     end
-    puts "Cat's Game!" if draw?
-    puts "Congratulations #{winner}!"
-end
 
 end
